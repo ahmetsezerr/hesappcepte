@@ -1,0 +1,30 @@
+# IntelliJ IDEA
+**/.idea/
+*.iml
+
+# Maven / Java
+**/target/
+*.class
+
+# React / Node.js
+**/node_modules/
+**/dist/
+**/build/
+
+# Environment / Secrets
+**/.env
+**/.env.*
+!**/.env.example
+
+# Local Configuration
+**/application-local.properties
+**/application-local.yml
+**/application-local.yaml
+
+# Logs
+*.log
+logs/
+
+# Operating System
+.DS_Store
+Thumbs.db

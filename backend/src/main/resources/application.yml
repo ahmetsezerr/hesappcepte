@@ -1,0 +1,16 @@
+spring:
+  application:
+    name: hesappcepte-backend
+
+  datasource:
+    url: ${HC_DB_URL:jdbc:postgresql://localhost:55433/hesappcepte_db}
+    username: ${HC_DB_USER:hesappcepte_user}
+    password: ${HC_DB_PASSWORD}
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    open-in-view: false
+
+  flyway:
+    enabled: true
