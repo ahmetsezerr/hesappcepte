@@ -1,0 +1,25 @@
+
+services:
+
+  db:
+    image: postgres:17
+
+    environment:
+      POSTGRES_DB: ${HC_DB_NAME}
+      POSTGRES_USER: ${HC_DB_USER}
+      POSTGRES_PASSWORD: ${HC_DB_PASSWORD:?Database password is required}
+
+    ports:
+      - "127.0.0.1:55433:5432"
+
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U \"$${POSTGRES_USER}\" -d \"$${POSTGRES_DB}\""]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  postgres_data:
