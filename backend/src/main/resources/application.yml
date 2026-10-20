@@ -14,3 +14,8 @@ spring:
 
   flyway:
     enabled: true
+
+app:
+      jwt:
+        secret: ${HC_JWT_SECRET}
+        expiration-minutes: 60
