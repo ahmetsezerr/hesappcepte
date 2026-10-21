@@ -1,8 +1,11 @@
 package com.hesappcepte.auth;
+import com.hesappcepte.auth.dto.AuthResponse;
+
 
 import com.hesappcepte.areamember.AreaMember;
 import com.hesappcepte.areamember.AreaMemberRepository;
 import com.hesappcepte.areamember.AreaMemberRole;
+import com.hesappcepte.auth.dto.LoginRequest;
 import com.hesappcepte.auth.dto.RegisterRequest;
 import com.hesappcepte.common.exception.BusinessException;
 import com.hesappcepte.financearea.FinanceArea;
@@ -11,6 +14,7 @@ import com.hesappcepte.financearea.FinanceAreaType;
 import com.hesappcepte.financearea.SharingType;
 import com.hesappcepte.user.User;
 import com.hesappcepte.user.UserRepository;
+import com.hesappcepte.user.UserStatus;
 import org.springframework.transaction.annotation.Transactional;
 import com.hesappcepte.common.exception.ErrorCode;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -24,22 +28,25 @@ public class AuthService {
     private final FinanceAreaRepository financeAreaRepository;
     private final AreaMemberRepository areaMemberRepository;
     private final PasswordEncoder passwordEncoder;
+    private final JwtService jwtService;
 
 
     public AuthService(
             UserRepository userRepository,
             FinanceAreaRepository financeAreaRepository,
             AreaMemberRepository areaMemberRepository,
-            PasswordEncoder passwordEncoder
+            PasswordEncoder passwordEncoder,
+            JwtService jwtService
     ) {
         this.userRepository = userRepository;
         this.financeAreaRepository = financeAreaRepository;
         this.areaMemberRepository = areaMemberRepository;
         this.passwordEncoder = passwordEncoder;
+        this.jwtService = jwtService;
     }
 
     @Transactional
-    public void register(RegisterRequest request){
+    public void register(RegisterRequest request) {
 
         String normalizedEmail = request.email().trim().toLowerCase(Locale.ROOT);
 
@@ -75,14 +82,38 @@ public class AuthService {
                 user,
                 AreaMemberRole.OWNER,
                 user
-    );
+        );
         areaMemberRepository.save(ownerMembership);
 
     }
 
 
 
-}
+    public AuthResponse login(LoginRequest request) {
 
+        String normalizedEmail =
+                request.email().trim().toLowerCase(Locale.ROOT);
+
+        User user = userRepository.findByEmail(normalizedEmail)
+                .orElseThrow(() ->
+                        new BusinessException(ErrorCode.INVALID_CREDENTIALS)
+                );
+
+        if (!passwordEncoder.matches(
+                request.password(),   //Girilen parolanın veritabanında saklanan parola hash'iyle eşleşip eşleşmediğini kontrol eder.
+                user.getPasswordHash()
+        )) {
+            throw new BusinessException(ErrorCode.INVALID_CREDENTIALS);
+        }
+
+        if (user.getStatus()!= UserStatus.ACTIVE){
+            throw new BusinessException(ErrorCode.USER_DISABLED);
+        }
+        String accessToken = jwtService.generateToken(user);
+
+        return new AuthResponse(accessToken);
+        }
+
+}
 
 
