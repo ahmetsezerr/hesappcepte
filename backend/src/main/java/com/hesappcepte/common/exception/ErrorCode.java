@@ -12,6 +12,17 @@ public enum ErrorCode {
     VALIDATION_ERROR(
             HttpStatus.BAD_REQUEST,
             "Request validation failed."
+    ),
+
+    INVALID_CREDENTIALS(
+
+            HttpStatus.UNAUTHORIZED,
+        "Invalid email or password."
+    ),
+
+    USER_DISABLED(
+            HttpStatus.FORBIDDEN,
+            "User account is disabled."
     );
 
     private final HttpStatus status;
