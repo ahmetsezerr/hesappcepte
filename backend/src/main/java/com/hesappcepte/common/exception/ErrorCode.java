@@ -23,7 +23,10 @@ public enum ErrorCode {
     USER_DISABLED(
             HttpStatus.FORBIDDEN,
             "User account is disabled."
-    );
+    ),
+    ACCOUNT_NOT_FOUND
+            (HttpStatus.NOT_FOUND,
+            "Account not found");
 
     private final HttpStatus status;
     private final String message;
