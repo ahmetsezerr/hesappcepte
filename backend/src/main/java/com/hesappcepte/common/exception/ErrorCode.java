@@ -26,7 +26,26 @@ public enum ErrorCode {
     ),
     ACCOUNT_NOT_FOUND
             (HttpStatus.NOT_FOUND,
-            "Account not found");
+            "Account not found."
+            ),
+    USER_NOT_FOUND
+            (HttpStatus.NOT_FOUND,
+                    "User not found."
+            ),
+    FINANCEAREA_NOT_FOUND
+            (HttpStatus.NOT_FOUND,
+                    "FinanceArea not found."
+            ),
+    FORBIDDEN(
+            HttpStatus.FORBIDDEN,
+            "You do not have permission to perform this action."
+    ),
+    FINANCEAREA_ARCHIVED(
+            HttpStatus.CONFLICT,
+            "Archived finance areas cannot be updated."
+    );
+
+
 
     private final HttpStatus status;
     private final String message;
