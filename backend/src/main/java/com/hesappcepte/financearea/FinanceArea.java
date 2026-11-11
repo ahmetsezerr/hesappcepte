@@ -1,5 +1,6 @@
 package com.hesappcepte.financearea;
 
+import com.hesappcepte.account.AccountStatus;
 import com.hesappcepte.user.User;
 import jakarta.persistence.*;
 
@@ -113,5 +114,17 @@ public class FinanceArea {
 
     public LocalDateTime getUpdatedAt() {
         return updatedAt;
+    }
+
+    public void rename(String name){
+        this.name = name;
+    }
+
+    public void archive(){
+        this.status = FinanceAreaStatus.ARCHIVED;
+    }
+
+    public void activate(){
+        this.status = FinanceAreaStatus.ACTIVE;
     }
 }
